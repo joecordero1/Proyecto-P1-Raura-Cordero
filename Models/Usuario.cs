@@ -11,8 +11,7 @@ namespace Proyecto_P1_Raura_Cordero.Models
 		public string? Phone { get; set; }
 
 
-		public int IdResena { get; set; }
-		public Resena? Resena { get; set; }
+        public List<Resena>? Resenas { get; set; }
 
-	}
+    }
 }

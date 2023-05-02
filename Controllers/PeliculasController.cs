@@ -14,16 +14,13 @@ namespace Proyecto_P1_Raura_Cordero.Controllers
     {
         private readonly Proyecto_P1_Raura_CorderoContext _context;
 
-		private readonly IWebHostEnvironment _env;
-		public PeliculasController(Proyecto_P1_Raura_CorderoContext context, IWebHostEnvironment env)
+        public PeliculasController(Proyecto_P1_Raura_CorderoContext context)
         {
             _context = context;
-			_env = env;
-		}
-        
+        }
 
-		// GET: Peliculas
-		public async Task<IActionResult> Index()
+        // GET: Peliculas
+        public async Task<IActionResult> Index()
         {
               return _context.Pelicula != null ? 
                           View(await _context.Pelicula.ToListAsync()) :
@@ -59,7 +56,7 @@ namespace Proyecto_P1_Raura_Cordero.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdPelicula,Nombre,Descripcion,Genero,anio,Poster,IdResena")] Pelicula pelicula)
+        public async Task<IActionResult> Create([Bind("IdPelicula,Nombre,Descripcion,Genero,anio,Poster")] Pelicula pelicula)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +88,7 @@ namespace Proyecto_P1_Raura_Cordero.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdPelicula,Nombre,Descripcion,Genero,anio,Poster,IdResena")] Pelicula pelicula)
+        public async Task<IActionResult> Edit(int id, [Bind("IdPelicula,Nombre,Descripcion,Genero,anio,Poster")] Pelicula pelicula)
         {
             if (id != pelicula.IdPelicula)
             {
@@ -162,57 +159,5 @@ namespace Proyecto_P1_Raura_Cordero.Controllers
         {
           return (_context.Pelicula?.Any(e => e.IdPelicula == id)).GetValueOrDefault();
         }
-
-		
-
-		[HttpPost]
-		public async Task<IActionResult> Upload(IFormFile file)
-		{
-			// Crea una ruta de archivo única
-			string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-
-			// Construye la ruta completa de la imagen
-			string filePath = Path.Combine(_env.WebRootPath, "posters", fileName);
-
-			// Guarda la imagen en el sistema de archivos
-			using (var stream = new FileStream(filePath, FileMode.Create))
-			{
-				await file.CopyToAsync(stream);
-			}
-
-			// Retorna la ruta de la imagen
-			return Ok(new { filePath });
-		}
-
-		[HttpPost]
-		public async Task<IActionResult> CrearPelicula(Pelicula pelicula, IFormFile file)
-		{
-			if (ModelState.IsValid)
-			{
-				if (file != null)
-				{
-					// Crea una ruta de archivo única
-					string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-
-					// Construye la ruta completa de la imagen
-					string filePath = Path.Combine(_env.WebRootPath, "posters", fileName);
-
-					// Guarda la imagen en el sistema de archivos
-					using (var stream = new FileStream(filePath, FileMode.Create))
-					{
-						await file.CopyToAsync(stream);
-					}
-
-					// Asigna la ruta de la imagen a la propiedad Poster del objeto Pelicula
-					pelicula.Poster = filePath;
-				}
-
-				_context.Add(pelicula);
-				await _context.SaveChangesAsync();
-				return RedirectToAction(nameof(Index));
-			}
-			return View(pelicula);
-		}
-
-	}
+    }
 }

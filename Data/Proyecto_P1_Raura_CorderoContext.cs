@@ -14,6 +14,14 @@ namespace Proyecto_P1_Raura_Cordero.Data
         {
         }
 
-        public DbSet<Proyecto_P1_Raura_Cordero.Models.Pelicula> Pelicula { get; set; } = default!;
+        public DbSet<Pelicula> Pelicula { get; set; } = default!;
+        public DbSet<Resena> Resenas { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Pelicula>()
+                .HasMany(i => i.Resenas)
+                .WithOne(c => c.Pelicula)
+                .HasForeignKey(c => c.IdPelicula);
+        }
     }
 }

@@ -11,10 +11,8 @@ namespace Proyecto_P1_Raura_Cordero.Models
 		public string? Descripcion { get; set; }
 		public string? Genero { get; set; }
 		public int anio { get; set; }
-		public string Poster { get; set; }
+		public string? Poster { get; set; }
 
-
-		public int IdResena { get; set; }
-		public Resena? Resena { get; set; }
-	}
+        public List<Resena>? Resenas { get; set; }
+    }
 }
